@@ -1,0 +1,16 @@
+#app {
+    width: 600px;
+}
+
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.flex-container div {
+    width: 30px;
+    height: 30px;
+    margin: 10px;
+    padding: 10px;
+    background-color: aquamarine;
+}
