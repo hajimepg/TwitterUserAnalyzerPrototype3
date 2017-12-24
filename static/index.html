@@ -9,20 +9,32 @@
 
     <body>
         <div id="app">
-            <h1>followEachOther</h1>
-            <div class="flex-container follow-each-other">
-                <div v-for="item in followEachOther"><p>{{ item }}</p></div>
-             </div>
+            <form>
+                <label>Screen Name</label>
+                <input type="text" v-model="analyazeScreenName">
+                <button type="button" v-on:click="analyze">Analyze</button>
+            </form>
 
-            <h1>followedOnly</h1>
-            <div class="flex-container followed-only">
-                <div v-for="item in followedOnly"><p>{{ item }}</p></div>
-             </div>
+            <div v-if="state === 'analyzing'">
+                <p>Analyzing {{ analyazeScreenName }}...</p>
+            </div>
 
-            <h1>followOnly</h1>
-            <div class="flex-container follow-only">
-                <div v-for="item in followOnly"><p>{{ item }}</p></div>
-             </div>
+            <div v-else-if="state === 'analyzed'">
+                <h1>followEachOther</h1>
+                <div class="flex-container follow-each-other">
+                    <div v-for="item in followEachOther"><p>{{ item }}</p></div>
+                </div>
+
+                <h1>followedOnly</h1>
+                <div class="flex-container followed-only">
+                    <div v-for="item in followedOnly"><p>{{ item }}</p></div>
+                </div>
+
+                <h1>followOnly</h1>
+                <div class="flex-container follow-only">
+                    <div v-for="item in followOnly"><p>{{ item }}</p></div>
+                </div>
+            </div>
         </div>
         <script src="bundle.js"></script>
     </body>

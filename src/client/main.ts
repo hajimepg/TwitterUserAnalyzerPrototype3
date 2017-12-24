@@ -4,6 +4,8 @@ import Vue from "vue";
 const app = new Vue({
     el: "#app",
     data: {
+        state: "no-analyazed",
+        analyazeScreenName: "",
         followEachOther: [
             1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
            11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
@@ -17,6 +19,15 @@ const app = new Vue({
             1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
            11, 12, 13, 14
         ],
+    },
+    methods: {
+        analyze() {
+            console.log(this.$data.analyazeScreenName);
+            this.$data.state = "analyzing";
+            setTimeout(() => {
+                this.$data.state = "analyzed";
+            }, 1000);
+        }
     }
 });
 /* tslint:enable:object-literal-sort-keys */
