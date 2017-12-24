@@ -4,6 +4,7 @@ h1 {
 
 #app {
     width: 600px;
+    margin: 10px auto 0 auto;
 }
 
 .flex-container {
