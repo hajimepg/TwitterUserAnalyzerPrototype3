@@ -1,3 +1,7 @@
+h1 {
+    font-size: 1.4em;
+}
+
 #app {
     width: 600px;
 }
@@ -10,7 +14,18 @@
 .flex-container div {
     width: 30px;
     height: 30px;
-    margin: 10px;
+    margin: 5px;
     padding: 10px;
+}
+
+.follow-each-other div {
     background-color: aquamarine;
+}
+
+.followed-only div {
+    background-color: orange;
+}
+
+.follow-only div {
+    background-color: darkolivegreen;
 }

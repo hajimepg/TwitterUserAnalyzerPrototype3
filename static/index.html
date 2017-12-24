@@ -9,8 +9,19 @@
 
     <body>
         <div id="app">
-            <div class="flex-container">
-                <div v-for="item in items"><p>{{ item }}</p></div>
+            <h1>followEachOther</h1>
+            <div class="flex-container follow-each-other">
+                <div v-for="item in followEachOther"><p>{{ item }}</p></div>
+             </div>
+
+            <h1>followedOnly</h1>
+            <div class="flex-container followed-only">
+                <div v-for="item in followedOnly"><p>{{ item }}</p></div>
+             </div>
+
+            <h1>followOnly</h1>
+            <div class="flex-container follow-only">
+                <div v-for="item in followOnly"><p>{{ item }}</p></div>
              </div>
         </div>
         <script src="bundle.js"></script>
