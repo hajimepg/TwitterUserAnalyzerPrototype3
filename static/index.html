@@ -20,20 +20,35 @@
             </div>
 
             <div v-else-if="state === 'analyzed'">
-                <h1>followEachOther</h1>
-                <div class="flex-container follow-each-other">
-                    <div v-for="item in followEachOther"><p>{{ item }}</p></div>
-                </div>
+                <h1 v-on:click="showFollowEachOther = !showFollowEachOther">
+                    followEachOther
+                    <span v-if="!showFollowEachOther">▼</span>
+                </h1>
+                <transition name="fade">
+                    <div v-if="showFollowEachOther" class="flex-container follow-each-other">
+                        <div v-for="item in followEachOther"><p>{{ item }}</p></div>
+                    </div>
+                </transition>
 
-                <h1>followedOnly</h1>
-                <div class="flex-container followed-only">
-                    <div v-for="item in followedOnly"><p>{{ item }}</p></div>
-                </div>
+                <h1 v-on:click="showFollowedOnly = !showFollowedOnly">
+                    followedOnly
+                    <span v-if="!showFollowedOnly">▼</span>
+                </h1>
+                <transition name="fade">
+                    <div v-if="showFollowedOnly" class="flex-container followed-only">
+                        <div v-for="item in followedOnly"><p>{{ item }}</p></div>
+                    </div>
+                </transition>
 
-                <h1>followOnly</h1>
-                <div class="flex-container follow-only">
-                    <div v-for="item in followOnly"><p>{{ item }}</p></div>
-                </div>
+                <h1 v-on:click="showFollowOnly = !showFollowOnly">
+                    followOnly
+                    <span v-if="!showFollowOnly">▼</span>
+                </h1>
+                <transition name="fade">
+                    <div v-if="showFollowOnly" class="flex-container follow-only">
+                        <div v-for="item in followOnly"><p>{{ item }}</p></div>
+                    </div>
+                </transition>
             </div>
         </div>
         <script src="bundle.js"></script>

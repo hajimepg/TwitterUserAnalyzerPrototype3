@@ -30,3 +30,11 @@ h1 {
 .follow-only div {
     background-color: darkolivegreen;
 }
+
+.fade-enter-active, .fade-leave-active {
+    transition: all .5s;
+}
+
+.fade-enter, .fade-leave-to {
+    opacity: 0
+}
