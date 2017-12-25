@@ -47,8 +47,8 @@ const app = new Vue({
             }, 4000);
 
             setTimeout(() => {
-                this.$data.analyzeProgresses.splice(0, this.$data.analyzeProgresses.length);
                 this.$data.state = "analyzed";
+                this.$data.analyzeProgresses.splice(0, this.$data.analyzeProgresses.length);
             }, 4500);
         }
     }
