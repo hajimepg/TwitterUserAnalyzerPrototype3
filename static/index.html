@@ -11,12 +11,12 @@
         <div id="app">
             <form>
                 <label>Screen Name</label>
-                <input type="text" v-model="analyazeScreenName">
+                <input type="text" v-model="analyzeScreenName">
                 <button type="button" v-on:click="analyze">Analyze</button>
             </form>
 
             <div v-if="state === 'analyzing'">
-                <p>Analyzing {{ analyazeScreenName }}...</p>
+                <p>Analyzing {{ analyzeScreenName }}...</p>
             </div>
 
             <div v-else-if="state === 'analyzed'">

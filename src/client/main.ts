@@ -5,7 +5,8 @@ const app = new Vue({
     el: "#app",
     data: {
         state: "no-analyazed",
-        analyazeScreenName: "",
+        analyzeScreenName: "",
+        analyzeProgresses: [],
         followEachOther: [
             1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
            11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
@@ -25,7 +26,7 @@ const app = new Vue({
     },
     methods: {
         analyze() {
-            console.log(this.$data.analyazeScreenName);
+            console.log(this.$data.analyzeScreenName);
             this.$data.state = "analyzing";
             setTimeout(() => {
                 this.$data.state = "analyzed";
