@@ -9,7 +9,7 @@ Vue.component("user-list", {
         <span v-if="!show">▼</span>
     </h1>
     <transition name="fade">
-        <div v-if="show" class="flex-container follow-each-other">
+        <div v-if="show" class="flex-container">
             <div v-for="item in list"><p>{{ item }}</p></div>
         </div>
     </transition>

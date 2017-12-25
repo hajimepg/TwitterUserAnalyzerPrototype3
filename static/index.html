@@ -24,7 +24,7 @@
             </div>
 
             <div v-else-if="state === 'analyzed'">
-                <user-list name="followEachOther" v-bind:list="followEachOther"></user-list>
+                <user-list name="followEachOther" v-bind:list="followEachOther" class="follow-each-other"></user-list>
 
                 <h1 v-on:click="showFollowedOnly = !showFollowedOnly">
                     followedOnly

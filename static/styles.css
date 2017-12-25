@@ -19,7 +19,7 @@ h1 {
     padding: 10px;
 }
 
-.follow-each-other div {
+.follow-each-other .flex-container div {
     background-color: aquamarine;
 }
 
