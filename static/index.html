@@ -25,26 +25,8 @@
 
             <div v-else-if="state === 'analyzed'">
                 <user-list name="followEachOther" v-bind:list="followEachOther" class="follow-each-other"></user-list>
-
-                <h1 v-on:click="showFollowedOnly = !showFollowedOnly">
-                    followedOnly
-                    <span v-if="!showFollowedOnly">▼</span>
-                </h1>
-                <transition name="fade">
-                    <div v-if="showFollowedOnly" class="flex-container followed-only">
-                        <div v-for="item in followedOnly"><p>{{ item }}</p></div>
-                    </div>
-                </transition>
-
-                <h1 v-on:click="showFollowOnly = !showFollowOnly">
-                    followOnly
-                    <span v-if="!showFollowOnly">▼</span>
-                </h1>
-                <transition name="fade">
-                    <div v-if="showFollowOnly" class="flex-container follow-only">
-                        <div v-for="item in followOnly"><p>{{ item }}</p></div>
-                    </div>
-                </transition>
+                <user-list name="followedOnly"    v-bind:list="followedOnly"    class="followed-only"    ></user-list>
+                <user-list name="followOnly"      v-bind:list="followOnly"      class="follow-only"      ></user-list>
             </div>
         </div>
         <script src="bundle.js"></script>

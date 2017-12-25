@@ -23,11 +23,11 @@ h1 {
     background-color: aquamarine;
 }
 
-.followed-only div {
+.followed-only .flex-container div {
     background-color: orange;
 }
 
-.follow-only div {
+.follow-only .flex-container div {
     background-color: darkolivegreen;
 }
 
