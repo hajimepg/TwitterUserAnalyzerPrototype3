@@ -28,9 +28,28 @@ const app = new Vue({
         analyze() {
             console.log(this.$data.analyzeScreenName);
             this.$data.state = "analyzing";
+            this.$data.analyzeProgresses.push(`Analyzing ${this.$data.analyzeScreenName} ...`);
+
             setTimeout(() => {
-                this.$data.state = "analyzed";
+                this.$data.analyzeProgresses.push(`Analyzing (1/3) ...`);
             }, 1000);
+
+            setTimeout(() => {
+                this.$data.analyzeProgresses.push(`Analyzing (2/3) ...`);
+            }, 2000);
+
+            setTimeout(() => {
+                this.$data.analyzeProgresses.push(`Analyzing (3/3) ...`);
+            }, 3000);
+
+            setTimeout(() => {
+                this.$data.analyzeProgresses.push(`Analyzing finish!!`);
+            }, 4000);
+
+            setTimeout(() => {
+                this.$data.analyzeProgresses.splice(0, this.$data.analyzeProgresses.length);
+                this.$data.state = "analyzed";
+            }, 4500);
         }
     }
 });

@@ -16,7 +16,11 @@
             </form>
 
             <div v-if="state === 'analyzing'">
-                <p>Analyzing {{ analyzeScreenName }}...</p>
+                <p>
+                    <template v-for="progress in analyzeProgresses">
+                        {{ progress }}<br />
+                    </template>
+                </p>
             </div>
 
             <div v-else-if="state === 'analyzed'">
