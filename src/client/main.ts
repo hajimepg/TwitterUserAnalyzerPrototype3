@@ -1,6 +1,28 @@
 import Vue from "vue";
 
 /* tslint:disable:object-literal-sort-keys */
+Vue.component("user-list", {
+    template: `
+<div>
+    <h1 v-on:click="show = !show">
+        {{ name }}
+        <span v-if="!show">▼</span>
+    </h1>
+    <transition name="fade">
+        <div v-if="show" class="flex-container follow-each-other">
+            <div v-for="item in list"><p>{{ item }}</p></div>
+        </div>
+    </transition>
+</div>
+`,
+    data() {
+        return {
+           show: false
+        };
+    },
+    props: ["name", "list"]
+});
+
 const app = new Vue({
     el: "#app",
     data: {
