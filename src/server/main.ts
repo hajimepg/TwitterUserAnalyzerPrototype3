@@ -6,6 +6,8 @@ import * as Koa from "koa";
 import * as KoaBodyParser from "koa-body-parser";
 import * as KoaStatic from "koa-static";
 
+import AnalyzeTaskRepository from "./analyzeTaskRepository";
+
 import ApiServerMiddleware from "./apiServerMiddleware";
 
 const app = new Koa();
@@ -17,4 +19,6 @@ app.use(KoaBodyParser());
 
 app.use(ApiServerMiddleware);
 
-app.listen(3000);
+AnalyzeTaskRepository.load().then(() => {
+    app.listen(3000);
+});
