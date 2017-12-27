@@ -7,8 +7,16 @@ import * as KoaBodyParser from "koa-body-parser";
 import * as KoaStatic from "koa-static";
 
 import AnalyzeTaskRepository from "./analyzeTaskRepository";
+import TwitterGateway from "./twitterGateway";
 
 import ApiServerMiddleware from "./apiServerMiddleware";
+
+TwitterGateway.init({
+    access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+    access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
+    consumer_key: process.env.TWITTER_CONSUMER_KEY,
+    consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+});
 
 const app = new Koa();
 

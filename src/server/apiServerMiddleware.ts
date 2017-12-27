@@ -2,8 +2,51 @@ import * as KoaRouter from "koa-router";
 
 import AnalyzeTask from "./analyzeTask";
 import AnalyzeTaskRepository from "./analyzeTaskRepository";
+import User from "./model/user";
+import TwitterGateway from "./twitterGateway";
 
 const router = new KoaRouter();
+
+function getFollowers(task: AnalyzeTask): Promise<User[]> {
+    return new Promise<User[]>((resolve, reject) => {
+        const users: User[] = [];
+
+        async function getUserListInternal(cursor: number) {
+            await AnalyzeTaskRepository.updateProgress(task, `get followers(${cursor})`);
+
+            const options = { skip_status: true, count: 200, cursor };
+
+            TwitterGateway.client.get("followers/list", options, async (error, response) => {
+                if (error) {
+                    if (error[0].message !== "Rate limit exceeded") {
+                        reject(error);
+                        return;
+                    }
+
+                    await AnalyzeTaskRepository.updateProgress(task, "Rate limit exceeded. wait 60 sec.");
+                    setTimeout(() => { getUserListInternal(cursor); }, 60 * 1000);
+                    return;
+                }
+
+                for (const user of response.users) {
+                    users.push({
+                        profileImageUrl: user.profile_image_url,
+                        screenName: user.screen_name,
+                    });
+                }
+
+                if (response.next_cursor === 0) {
+                    resolve(users);
+                }
+                else {
+                    getUserListInternal(response.next_cursor);
+                }
+            });
+        }
+
+        getUserListInternal(-1);
+    });
+}
 
 // debug
 async function setTimeoutPromise(delay: number): Promise<void> {
@@ -15,13 +58,12 @@ async function setTimeoutPromise(delay: number): Promise<void> {
 
 async function analyze(task: AnalyzeTask) {
     await AnalyzeTaskRepository.updateProgress(task, "analyzing started");
-    await setTimeoutPromise(1000);
-    await AnalyzeTaskRepository.updateProgress(task, "Analyzing (1/3) ...");
-    await setTimeoutPromise(1000);
-    await AnalyzeTaskRepository.updateProgress(task, "Analyzing (2/3) ...");
-    await setTimeoutPromise(1000);
-    await AnalyzeTaskRepository.updateProgress(task, "Analyzing (3/3) ...");
-    await setTimeoutPromise(1000);
+    try {
+        const followers = await getFollowers(task);
+    }
+    catch (error) {
+        console.error(JSON.stringify(error, null, 4));
+    }
     await AnalyzeTaskRepository.updateProgress(task, "Analyzing finish!!");
 
     AnalyzeTaskRepository.compactiton(); // debug
