@@ -1,8 +1,15 @@
 import * as KoaRouter from "koa-router";
 
+import AnalyzeTask from "./analyzeTask";
 import AnalyzeTaskRepository from "./analyzeTaskRepository";
 
 const router = new KoaRouter();
+
+async function analyze(task: AnalyzeTask) {
+    console.log(`analyzing ${task._id} started`);
+
+    return;
+}
 
 router.post("/api/analyzeTask", async (ctx, next) => {
     if (ctx.request.hasOwnProperty("body") === false) {
@@ -27,6 +34,8 @@ router.post("/api/analyzeTask", async (ctx, next) => {
     }
 
     const task = await AnalyzeTaskRepository.insert(ctx.request.body.screenName);
+
+    setImmediate(() => { analyze(task); });
 
     ctx.body = { id: task._id };
 });
