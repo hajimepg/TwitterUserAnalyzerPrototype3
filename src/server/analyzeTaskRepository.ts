@@ -14,6 +14,7 @@ class AnalyzeTaskRepository {
             this.db.loadDatabase((error) => {
                 if (error !== null) {
                     reject(error);
+                    return;
                 }
 
                 resolve();
@@ -26,6 +27,7 @@ class AnalyzeTaskRepository {
             this.db.insert({ screenName }, (error, newDoc) => {
                 if (error !== null) {
                     reject(error);
+                    return;
                 }
 
                 resolve(newDoc);
