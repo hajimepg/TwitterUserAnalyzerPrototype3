@@ -5,10 +5,26 @@ import AnalyzeTaskRepository from "./analyzeTaskRepository";
 
 const router = new KoaRouter();
 
-async function analyze(task: AnalyzeTask) {
-    console.log(`analyzing ${task._id} started`);
+// debug
+async function setTimeoutPromise(delay: number): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+        setTimeout(resolve, delay);
+    });
+}
+// ここまでdebug
 
-    return;
+async function analyze(task: AnalyzeTask) {
+    await AnalyzeTaskRepository.updateProgress(task, "analyzing started");
+    await setTimeoutPromise(1000);
+    await AnalyzeTaskRepository.updateProgress(task, "Analyzing (1/3) ...");
+    await setTimeoutPromise(1000);
+    await AnalyzeTaskRepository.updateProgress(task, "Analyzing (2/3) ...");
+    await setTimeoutPromise(1000);
+    await AnalyzeTaskRepository.updateProgress(task, "Analyzing (3/3) ...");
+    await setTimeoutPromise(1000);
+    await AnalyzeTaskRepository.updateProgress(task, "Analyzing finish!!");
+
+    AnalyzeTaskRepository.compactiton(); // debug
 }
 
 router.post("/api/analyzeTask", async (ctx, next) => {
