@@ -5,7 +5,26 @@ import AnalyzeTaskRepository from "./analyzeTaskRepository";
 const router = new KoaRouter();
 
 router.post("/api/analyzeTask", async (ctx, next) => {
-    console.log(`/api/analyzeTask called. ctx.request.body.screenName=${ctx.request.body.screenName}`);
+    if (ctx.request.hasOwnProperty("body") === false) {
+        ctx.response.status = 400;
+        ctx.response.body = {
+            error: {
+                message: "Empty Body"
+            }
+        };
+        return;
+    }
+
+    if (ctx.request.body.hasOwnProperty("screenName") === false
+        || ctx.request.body.screenName.length === 0) {
+        ctx.response.status = 400;
+        ctx.response.body = {
+            error: {
+                message: "Invalid screenName"
+            }
+        };
+        return;
+    }
 
     const task = await AnalyzeTaskRepository.insert(ctx.request.body.screenName);
 
