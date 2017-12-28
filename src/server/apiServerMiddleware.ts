@@ -70,6 +70,21 @@ function getFollowers(task: AnalyzeTask): Promise<User[]> {
     );
 }
 
+function getFriends(task: AnalyzeTask): Promise<User[]> {
+    return getList(
+        "friends/list",
+        async (cursor: number) => {
+            await AnalyzeTaskRepository.updateProgress(task, `get friends(${cursor})`);
+        },
+        async (cursor: number) => {
+            await AnalyzeTaskRepository.updateProgress(task, `get friends(${cursor}) finished.`);
+        },
+        async () => {
+            await AnalyzeTaskRepository.updateProgress(task, "Rate limit exceeded. wait 60 sec.");
+        }
+    );
+}
+
 // debug
 async function setTimeoutPromise(delay: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
@@ -82,6 +97,7 @@ async function analyze(task: AnalyzeTask) {
     await AnalyzeTaskRepository.updateProgress(task, "analyzing started");
     try {
         const followers = await getFollowers(task);
+        const friends = await getFriends(task);
     }
     catch (error) {
         console.error(JSON.stringify(error, null, 4));
