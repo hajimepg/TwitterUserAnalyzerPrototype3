@@ -85,14 +85,6 @@ function getFriends(task: AnalyzeTask): Promise<User[]> {
     );
 }
 
-// debug
-async function setTimeoutPromise(delay: number): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-        setTimeout(resolve, delay);
-    });
-}
-// ここまでdebug
-
 async function analyze(task: AnalyzeTask) {
     await AnalyzeTaskRepository.updateProgress(task, "analyzing started");
     try {
@@ -103,8 +95,6 @@ async function analyze(task: AnalyzeTask) {
         console.error(JSON.stringify(error, null, 4));
     }
     await AnalyzeTaskRepository.updateProgress(task, "Analyzing finish!!");
-
-    AnalyzeTaskRepository.compactiton(); // debug
 }
 
 router.post("/api/analyzeTask", async (ctx, next) => {
