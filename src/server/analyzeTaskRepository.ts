@@ -10,7 +10,7 @@ class AnalyzeTaskRepository {
         this.db = new DataStore({ filename: "db/analyazeTask.db" });
     }
 
-    public async load(): Promise<void> {
+    public async init(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.db.loadDatabase((error) => {
                 if (error !== null) {

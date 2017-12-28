@@ -28,7 +28,7 @@ app.use(KoaBodyParser());
 
 app.use(ApiServerMiddleware);
 
-AnalyzeTaskRepository.load()
+AnalyzeTaskRepository.init()
     .then(() => { ProfileImageRepository.init(); })
     .then(() => { app.listen(3000); })
     .catch((error) => {
