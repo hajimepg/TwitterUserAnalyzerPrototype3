@@ -9,92 +9,34 @@ import TwitterGateway from "./twitterGateway";
 
 const router = new KoaRouter();
 
-function getUserList(
-    endpoint: string,
-    onRequest: (numuber) => void,
-    onRequestSuccuess: (numuber) => void,
-    onRateLimit: () => void
-): Promise<User[]> {
-    return new Promise<User[]>((resolve, reject) => {
-        const users: User[] = [];
-
-        function getUserListInternal(cursor: number) {
-            onRequest(cursor);
-
-            const options = { skip_status: true, count: 200, cursor };
-
-            TwitterGateway.client.get(endpoint, options, (error, response) => {
-                if (error) {
-                    if (error[0].message !== "Rate limit exceeded") {
-                        reject(error);
-                        return;
-                    }
-
-                    onRateLimit();
-                    setTimeout(() => { getUserListInternal(cursor); }, 60 * 1000);
-                    return;
-                }
-
-                for (const user of response.users) {
-                    users.push({
-                        profileImageUrl: user.profile_image_url,
-                        screenName: user.screen_name,
-                    });
-                }
-
-                onRequestSuccuess(cursor);
-
-                if (response.next_cursor === 0) {
-                    resolve(users);
-                }
-                else {
-                    getUserListInternal(response.next_cursor);
-                }
-            });
-        }
-
-        getUserListInternal(-1);
-    });
-}
-
-function getFollowers(task: AnalyzeTask): Promise<User[]> {
-    return getUserList(
-        "followers/list",
-        async (cursor: number) => {
-            await AnalyzeTaskRepository.updateProgress(task, `get followers(${cursor})`);
-        },
-        async (cursor: number) => {
-            await AnalyzeTaskRepository.updateProgress(task, `get followers(${cursor}) finished.`);
-        },
-        async () => {
-            await AnalyzeTaskRepository.updateProgress(task, "Rate limit exceeded. wait 60 sec.");
-        }
-    );
-}
-
-function getFriends(task: AnalyzeTask): Promise<User[]> {
-    return getUserList(
-        "friends/list",
-        async (cursor: number) => {
-            await AnalyzeTaskRepository.updateProgress(task, `get friends(${cursor})`);
-        },
-        async (cursor: number) => {
-            await AnalyzeTaskRepository.updateProgress(task, `get friends(${cursor}) finished.`);
-        },
-        async () => {
-            await AnalyzeTaskRepository.updateProgress(task, "Rate limit exceeded. wait 60 sec.");
-        }
-    );
-}
-
 async function analyze(task: AnalyzeTask) {
     await AnalyzeTaskRepository.updateProgress(task, "analyzing started");
 
     let followers: User[];
     let friends: User[];
     try {
-        followers = await getFollowers(task);
-        friends = await getFriends(task);
+        followers = await TwitterGateway.getFollowers(
+            async (cursor: number) => {
+                await AnalyzeTaskRepository.updateProgress(task, `get followers(${cursor})`);
+            },
+            async (cursor: number) => {
+                await AnalyzeTaskRepository.updateProgress(task, `get followers(${cursor}) finished.`);
+            },
+            async () => {
+                await AnalyzeTaskRepository.updateProgress(task, "Rate limit exceeded. wait 60 sec.");
+            }
+        );
+        friends = await TwitterGateway.getFriends(
+            async (cursor: number) => {
+                await AnalyzeTaskRepository.updateProgress(task, `get friends(${cursor})`);
+            },
+            async (cursor: number) => {
+                await AnalyzeTaskRepository.updateProgress(task, `get friends(${cursor}) finished.`);
+            },
+            async () => {
+                await AnalyzeTaskRepository.updateProgress(task, "Rate limit exceeded. wait 60 sec.");
+            }
+        );
     }
     catch (error) {
         console.error(JSON.stringify(error, null, 4));
@@ -114,7 +56,8 @@ async function analyze(task: AnalyzeTask) {
     const downloader = new ProfileImageDownloader();
     downloader.add(followers);
     downloader.add(followEachOther);
-    await downloader.download();
+    const result = await downloader.download();
+    console.log(JSON.stringify(result, null, 4));
     await AnalyzeTaskRepository.updateProgress(task, "profile image download finish");
 
     await AnalyzeTaskRepository.updateProgress(task, "Analyzing finish!!");
