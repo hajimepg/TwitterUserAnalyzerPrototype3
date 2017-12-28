@@ -46,7 +46,7 @@ export default class ProfileImageDownloader {
                     return;
                 }
 
-                const response = await axios.get(target.profileImageUrl);
+                const response = await axios.get(target.profileImageUrl, { responseType: "arraybuffer" });
 
                 if (response.status !== 200) {
                     console.log(`download ${target.profileImageUrl} failed. statusCode=${response.status}`);
@@ -61,7 +61,7 @@ export default class ProfileImageDownloader {
                 }
 
                 const filename = `${target.screenName}.${extension}`;
-                fs.writeFileSync(path.join(this.imageDir, filename), response.data);
+                fs.writeFileSync(path.join(this.imageDir, filename), new Buffer(response.data, "binary"));
                 result[target.screenName] = filename;
             }
         });
