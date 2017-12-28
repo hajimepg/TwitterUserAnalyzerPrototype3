@@ -1,4 +1,5 @@
 import * as KoaRouter from "koa-router";
+import * as lodash from "lodash";
 
 import AnalyzeTask from "./analyzeTask";
 import AnalyzeTaskRepository from "./analyzeTaskRepository";
@@ -87,13 +88,27 @@ function getFriends(task: AnalyzeTask): Promise<User[]> {
 
 async function analyze(task: AnalyzeTask) {
     await AnalyzeTaskRepository.updateProgress(task, "analyzing started");
+
+    let followers: User[];
+    let friends: User[];
     try {
-        const followers = await getFollowers(task);
-        const friends = await getFriends(task);
+        followers = await getFollowers(task);
+        friends = await getFriends(task);
     }
     catch (error) {
         console.error(JSON.stringify(error, null, 4));
+        return;
     }
+
+    await AnalyzeTaskRepository.updateProgress(task, "user grouping start");
+    const userComparator = (a, b) => a.screenName === b.screenName;
+    const followEachOther = lodash.intersectionWith(followers, friends, userComparator);
+    const followedOnly = lodash.differenceWith(followers, friends, userComparator);
+    const followOnly = lodash.differenceWith(friends, followers, userComparator);
+    /* tslint:disable-next-line:object-literal-sort-keys */
+    await AnalyzeTaskRepository.updateResult(task, { followEachOther, followedOnly, followOnly });
+    await AnalyzeTaskRepository.updateProgress(task, "user grouping finish");
+
     await AnalyzeTaskRepository.updateProgress(task, "Analyzing finish!!");
 }
 

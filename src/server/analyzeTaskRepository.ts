@@ -1,5 +1,6 @@
 import * as DataStore from "nedb";
 
+import AnalyzeResult from "./analyzeResult";
 import AnalyzeTask from "./analyzeTask";
 
 class AnalyzeTaskRepository {
@@ -39,6 +40,27 @@ class AnalyzeTaskRepository {
         return new Promise<AnalyzeTask>((resolve, reject) => {
             const query = { _id: task._id };
             const update = { $push: { progresses: newProgress } };
+            const options = { returnUpdatedDocs: true };
+            this.db.update(query, update, options, (error, numAffected, affectedDocuments) => {
+                if (error != null) {
+                    reject(error);
+                    return;
+                }
+
+                if (numAffected !== 1) {
+                    reject(new Error(`unexpected rows(id=${task._id}, expected=1, actual=${numAffected}`));
+                    return;
+                }
+
+                resolve(affectedDocuments[0]);
+            });
+        });
+    }
+
+    public async updateResult(task: AnalyzeTask, result: AnalyzeResult) {
+        return new Promise<AnalyzeTask>((resolve, reject) => {
+            const query = { _id: task._id };
+            const update = { $set: { result } };
             const options = { returnUpdatedDocs: true };
             this.db.update(query, update, options, (error, numAffected, affectedDocuments) => {
                 if (error != null) {

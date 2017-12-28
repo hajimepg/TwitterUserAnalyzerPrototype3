@@ -11,6 +11,7 @@
     "koa-body-parser": "^1.1.2",
     "koa-router": "^7.3.0",
     "koa-static": "^4.0.2",
+    "lodash": "^4.17.4",
     "nedb": "^1.8.0",
     "ts-loader": "^3.2.0",
     "tslint": "^5.8.0",
