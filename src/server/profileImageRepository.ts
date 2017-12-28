@@ -3,7 +3,7 @@ import * as path from "path";
 
 import * as DataStore from "nedb";
 
-import ProfileImage from "./profileImage";
+import ProfileImage from "./model/profileImage";
 
 class ProfileImageRepository {
     public readonly imageDir = "db/profileImage";
