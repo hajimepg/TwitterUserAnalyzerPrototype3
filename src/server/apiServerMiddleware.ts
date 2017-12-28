@@ -7,7 +7,7 @@ import TwitterGateway from "./twitterGateway";
 
 const router = new KoaRouter();
 
-function getList(
+function getUserList(
     endpoint: string,
     onRequest: (numuber) => void,
     onRequestSuccuess: (numuber) => void,
@@ -56,7 +56,7 @@ function getList(
 }
 
 function getFollowers(task: AnalyzeTask): Promise<User[]> {
-    return getList(
+    return getUserList(
         "followers/list",
         async (cursor: number) => {
             await AnalyzeTaskRepository.updateProgress(task, `get followers(${cursor})`);
@@ -71,7 +71,7 @@ function getFollowers(task: AnalyzeTask): Promise<User[]> {
 }
 
 function getFriends(task: AnalyzeTask): Promise<User[]> {
-    return getList(
+    return getUserList(
         "friends/list",
         async (cursor: number) => {
             await AnalyzeTaskRepository.updateProgress(task, `get friends(${cursor})`);
