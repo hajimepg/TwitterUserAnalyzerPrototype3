@@ -114,7 +114,7 @@ async function analyze(task: AnalyzeTask) {
     const downloader = new ProfileImageDownloader("db/profileImage");
     downloader.add(followers);
     downloader.add(followEachOther);
-    const profileImages = await downloader.download();
+    await downloader.download();
     await AnalyzeTaskRepository.updateProgress(task, "profile image download finish");
 
     await AnalyzeTaskRepository.updateProgress(task, "Analyzing finish!!");

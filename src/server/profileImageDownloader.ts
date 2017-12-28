@@ -5,6 +5,7 @@ import axios from "axios";
 import * as lodash from "lodash";
 
 import User from "./model/user";
+import ProfileImageRepository from "./profileImageRepository";
 
 export default class ProfileImageDownloader {
     protected imageDir: string;
@@ -24,8 +25,8 @@ export default class ProfileImageDownloader {
         this.downloadQueue = lodash.unionWith(this.downloadQueue, users, userComparator);
     }
 
-    public download(): Promise<any> {
-        return new Promise<any>(async (resolve, reject) => {
+    public download() {
+        return new Promise<void>(async (resolve, reject) => {
             if (fs.existsSync(this.imageDir)) {
                 if (fs.statSync(this.imageDir).isDirectory() === false) {
                     throw new Error("directory name already used");
@@ -36,14 +37,18 @@ export default class ProfileImageDownloader {
                 fs.mkdirSync(this.imageDir);
             }
 
-            const result = {};
-
             while (true) {
                 const target = this.downloadQueue.shift();
 
                 if (target === undefined) {
-                    resolve(result);
+                    resolve();
                     return;
+                }
+
+                const oldProfileImage = await ProfileImageRepository.find(target.screenName);
+                if (oldProfileImage !== null && oldProfileImage.sourceUrl === target.profileImageUrl) {
+                    console.log(`profile image for ${target.screenName} is already downloaded. skip.`);
+                    continue;
                 }
 
                 const response = await axios.get(target.profileImageUrl, { responseType: "arraybuffer" });
@@ -62,7 +67,7 @@ export default class ProfileImageDownloader {
 
                 const filename = `${target.screenName}.${extension}`;
                 fs.writeFileSync(path.join(this.imageDir, filename), new Buffer(response.data, "binary"));
-                result[target.screenName] = filename;
+                ProfileImageRepository.upsert(target.screenName, target.profileImageUrl, filename);
             }
         });
     }

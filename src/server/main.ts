@@ -7,6 +7,7 @@ import * as KoaBodyParser from "koa-body-parser";
 import * as KoaStatic from "koa-static";
 
 import AnalyzeTaskRepository from "./analyzeTaskRepository";
+import ProfileImageRepository from "./profileImageRepository";
 import TwitterGateway from "./twitterGateway";
 
 import ApiServerMiddleware from "./apiServerMiddleware";
@@ -27,6 +28,10 @@ app.use(KoaBodyParser());
 
 app.use(ApiServerMiddleware);
 
-AnalyzeTaskRepository.load().then(() => {
-    app.listen(3000);
-});
+AnalyzeTaskRepository.load()
+    .then(() => { ProfileImageRepository.load(); })
+    .then(() => { app.listen(3000); })
+    .catch((error) => {
+        console.log(error);
+        process.exit(1);
+    });
