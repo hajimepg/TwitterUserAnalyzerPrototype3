@@ -7,7 +7,8 @@ import TwitterGateway from "./twitterGateway";
 
 const router = new KoaRouter();
 
-function getFollowers(
+function getList(
+    endpoint: string,
     onRequest: (numuber) => void,
     onRequestSuccuess: (numuber) => void,
     onRateLimit: () => void
@@ -20,7 +21,7 @@ function getFollowers(
 
             const options = { skip_status: true, count: 200, cursor };
 
-            TwitterGateway.client.get("followers/list", options, (error, response) => {
+            TwitterGateway.client.get(endpoint, options, (error, response) => {
                 if (error) {
                     if (error[0].message !== "Rate limit exceeded") {
                         reject(error);
@@ -54,6 +55,21 @@ function getFollowers(
     });
 }
 
+function getFollowers(task: AnalyzeTask): Promise<User[]> {
+    return getList(
+        "followers/list",
+        async (cursor: number) => {
+            await AnalyzeTaskRepository.updateProgress(task, `get followers(${cursor})`);
+        },
+        async (cursor: number) => {
+            await AnalyzeTaskRepository.updateProgress(task, `get followers(${cursor}) finished.`);
+        },
+        async () => {
+            await AnalyzeTaskRepository.updateProgress(task, "Rate limit exceeded. wait 60 sec.");
+        }
+    );
+}
+
 // debug
 async function setTimeoutPromise(delay: number): Promise<void> {
     return new Promise<void>((resolve, reject) => {
@@ -65,17 +81,7 @@ async function setTimeoutPromise(delay: number): Promise<void> {
 async function analyze(task: AnalyzeTask) {
     await AnalyzeTaskRepository.updateProgress(task, "analyzing started");
     try {
-        const followers = await getFollowers(
-            async (cursor: number) => {
-                await AnalyzeTaskRepository.updateProgress(task, `get followers(${cursor})`);
-            },
-            async (cursor: number) => {
-                await AnalyzeTaskRepository.updateProgress(task, `get followers(${cursor}) finished.`);
-            },
-            async () => {
-                await AnalyzeTaskRepository.updateProgress(task, "Rate limit exceeded. wait 60 sec.");
-            }
-        );
+        const followers = await getFollowers(task);
     }
     catch (error) {
         console.error(JSON.stringify(error, null, 4));
