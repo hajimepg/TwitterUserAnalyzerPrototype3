@@ -4,6 +4,7 @@ import * as lodash from "lodash";
 import AnalyzeTask from "./analyzeTask";
 import AnalyzeTaskRepository from "./analyzeTaskRepository";
 import User from "./model/user";
+import ProfileImageDownloader from "./profileImageDownloader";
 import TwitterGateway from "./twitterGateway";
 
 const router = new KoaRouter();
@@ -108,6 +109,13 @@ async function analyze(task: AnalyzeTask) {
     /* tslint:disable-next-line:object-literal-sort-keys */
     await AnalyzeTaskRepository.updateResult(task, { followEachOther, followedOnly, followOnly });
     await AnalyzeTaskRepository.updateProgress(task, "user grouping finish");
+
+    await AnalyzeTaskRepository.updateProgress(task, "profile image download start");
+    const downloader = new ProfileImageDownloader("db/profileImage");
+    downloader.add(followers);
+    downloader.add(followEachOther);
+    const profileImages = await downloader.download();
+    await AnalyzeTaskRepository.updateProgress(task, "profile image download finish");
 
     await AnalyzeTaskRepository.updateProgress(task, "Analyzing finish!!");
 }
