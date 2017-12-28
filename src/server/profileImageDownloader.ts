@@ -1,6 +1,3 @@
-import * as fs from "fs";
-import * as path from "path";
-
 import axios from "axios";
 import * as lodash from "lodash";
 
@@ -8,16 +5,7 @@ import User from "./model/user";
 import ProfileImageRepository from "./profileImageRepository";
 
 export default class ProfileImageDownloader {
-    protected imageDir: string;
     protected downloadQueue: User[];
-
-    public constructor(imageDir: string) {
-        if (imageDir === "") {
-            throw new Error("imageDir is empty");
-        }
-
-        this.imageDir = imageDir;
-    }
 
     public add(users: User[]): void {
         const userComparator = (a, b) => a.screenName === b.screenName;
@@ -27,16 +15,6 @@ export default class ProfileImageDownloader {
 
     public download() {
         return new Promise<void>(async (resolve, reject) => {
-            if (fs.existsSync(this.imageDir)) {
-                if (fs.statSync(this.imageDir).isDirectory() === false) {
-                    throw new Error("directory name already used");
-                }
-                fs.accessSync(this.imageDir, fs.constants.W_OK);
-            }
-            else {
-                fs.mkdirSync(this.imageDir);
-            }
-
             while (true) {
                 const target = this.downloadQueue.shift();
 
@@ -66,8 +44,8 @@ export default class ProfileImageDownloader {
                 }
 
                 const filename = `${target.screenName}.${extension}`;
-                fs.writeFileSync(path.join(this.imageDir, filename), new Buffer(response.data, "binary"));
-                ProfileImageRepository.upsert(target.screenName, target.profileImageUrl, filename);
+                ProfileImageRepository.upsert(target.screenName, target.profileImageUrl, filename,
+                    new Buffer(response.data, "binary"));
             }
         });
     }

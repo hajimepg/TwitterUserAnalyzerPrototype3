@@ -29,7 +29,7 @@ app.use(KoaBodyParser());
 app.use(ApiServerMiddleware);
 
 AnalyzeTaskRepository.load()
-    .then(() => { ProfileImageRepository.load(); })
+    .then(() => { ProfileImageRepository.init(); })
     .then(() => { app.listen(3000); })
     .catch((error) => {
         console.log(error);
