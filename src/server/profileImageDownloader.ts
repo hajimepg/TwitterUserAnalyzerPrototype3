@@ -3,7 +3,7 @@ import * as lodash from "lodash";
 
 import User from "./model/user";
 import ProfileImageDownloadResult from "./profileImageDownloadResult";
-import ProfileImageRepository from "./profileImageRepository";
+import ProfileImageRepository from "./repository/profileImageRepository";
 
 export default class ProfileImageDownloader {
     protected downloadQueue: User[];

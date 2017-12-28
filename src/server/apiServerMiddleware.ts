@@ -1,7 +1,7 @@
 import * as KoaRouter from "koa-router";
 
-import AnalyzeTaskRepository from "./analyzeTaskRepository";
 import * as BackgroundJob from "./backgroundJob";
+import AnalyzeTaskRepository from "./repository/analyzeTaskRepository";
 
 const router = new KoaRouter();
 

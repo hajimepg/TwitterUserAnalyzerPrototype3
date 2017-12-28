@@ -6,8 +6,8 @@ import * as Koa from "koa";
 import * as KoaBodyParser from "koa-body-parser";
 import * as KoaStatic from "koa-static";
 
-import AnalyzeTaskRepository from "./analyzeTaskRepository";
-import ProfileImageRepository from "./profileImageRepository";
+import AnalyzeTaskRepository from "./repository/analyzeTaskRepository";
+import ProfileImageRepository from "./repository/profileImageRepository";
 import TwitterGateway from "./twitterGateway";
 
 import ApiServerMiddleware from "./apiServerMiddleware";

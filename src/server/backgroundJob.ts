@@ -1,9 +1,9 @@
 import * as lodash from "lodash";
 
 import AnalyzeTask from "./analyzeTask";
-import AnalyzeTaskRepository from "./analyzeTaskRepository";
 import User from "./model/user";
 import ProfileImageDownloader from "./profileImageDownloader";
+import AnalyzeTaskRepository from "./repository/analyzeTaskRepository";
 import TwitterGateway from "./twitterGateway";
 
 export async function analyze(task: AnalyzeTask) {
