@@ -1,7 +1,7 @@
 import * as DataStore from "nedb";
 
-import AnalyzeResult from "./model/analyzeResult";
-import AnalyzeTask from "./model/analyzeTask";
+import AnalyzeResult from "../model/analyzeResult";
+import AnalyzeTask from "../model/analyzeTask";
 
 class AnalyzeTaskRepository {
     private db;
