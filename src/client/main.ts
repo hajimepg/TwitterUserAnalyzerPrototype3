@@ -1,3 +1,4 @@
+import axios from "axios";
 import Vue from "vue";
 
 /* tslint:disable:object-literal-sort-keys */
@@ -28,6 +29,7 @@ const app = new Vue({
     data: {
         state: "no-analyazed",
         analyzeScreenName: "",
+        analyzeId: "",
         analyzeProgresses: [],
         followEachOther: [
             1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
@@ -45,6 +47,17 @@ const app = new Vue({
     },
     methods: {
         analyze() {
+            axios.post("http://localhost:3000/api/analyzeTask", {
+                    screenName: this.$data.analyzeScreenName
+                })
+                .then((response) => {
+                    this.$data.analyzeId = response.data.id;
+                    console.log(`id=${this.$data.analyzeId}`);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+
             console.log(this.$data.analyzeScreenName);
             this.$data.state = "analyzing";
             this.$data.analyzeProgresses.push(`Analyzing ${this.$data.analyzeScreenName} ...`);
