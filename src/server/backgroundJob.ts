@@ -56,7 +56,6 @@ export async function analyze(task: AnalyzeTask) {
     downloader.add(followers);
     downloader.add(followEachOther);
     const result = await downloader.download();
-    console.log(JSON.stringify(result, null, 4));
     await AnalyzeTaskRepository.updateProgress(task, "profile image download finish");
 
     await AnalyzeTaskRepository.updateProgress(task, "Analyzing finish!!");
