@@ -42,10 +42,11 @@ export async function analyze(task: AnalyzeTask) {
     }
 
     await AnalyzeTaskRepository.updateProgress(task, "user grouping start");
-    const userComparator = (a, b) => a.screenName === b.screenName;
-    const followEachOther = lodash.intersectionWith(followers, friends, userComparator);
-    const followedOnly = lodash.differenceWith(followers, friends, userComparator);
-    const followOnly = lodash.differenceWith(friends, followers, userComparator);
+    const followerScreenNames = followers.map((u) => u.screenName);
+    const friendScreenNames = friends.map((u) => u.screenName);
+    const followEachOther = lodash.intersectionWith(followerScreenNames, friendScreenNames);
+    const followedOnly = lodash.differenceWith(followerScreenNames, friendScreenNames);
+    const followOnly = lodash.differenceWith(friendScreenNames, followerScreenNames);
     /* tslint:disable-next-line:object-literal-sort-keys */
     await AnalyzeTaskRepository.updateResult(task, { followEachOther, followedOnly, followOnly });
     await AnalyzeTaskRepository.updateProgress(task, "user grouping finish");
