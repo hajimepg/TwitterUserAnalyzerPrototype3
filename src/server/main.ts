@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
 import * as path from "path";
+import * as process from "process";
 
+import * as Commander from "commander";
 import * as Koa from "koa";
 import * as KoaBodyParser from "koa-body-parser";
 import * as KoaStatic from "koa-static";
@@ -13,12 +15,20 @@ import TwitterGateway from "./twitterGateway";
 
 import ApiServerMiddleware from "./apiServerMiddleware";
 
-const twitterClient = new Twitter({
-    access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
-    access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
-    consumer_key: process.env.TWITTER_CONSUMER_KEY,
-    consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-});
+import StubTwitterClient from "./stub/stubTwitterClient";
+
+Commander
+    .option("--use-stub")
+    .parse(process.argv);
+
+const twitterClient = (Commander.useStub)
+    ? new StubTwitterClient()
+    : new Twitter({
+        access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+        access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
+        consumer_key: process.env.TWITTER_CONSUMER_KEY,
+        consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+    });
 TwitterGateway.init(twitterClient);
 
 const app = new Koa();
