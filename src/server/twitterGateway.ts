@@ -1,5 +1,4 @@
-import * as Twitter from "twitter";
-
+import ITwitterClient from "./ITwitterClient";
 import User from "./model/user";
 
 interface ITwitterCredential {
@@ -12,8 +11,8 @@ interface ITwitterCredential {
 class TwitterGateway {
     protected client;
 
-    public init(credential: ITwitterCredential) {
-        this.client = new Twitter(credential);
+    public init(client: ITwitterClient) {
+        this.client = client;
     }
 
     public getFollowers(
