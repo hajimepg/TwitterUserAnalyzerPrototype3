@@ -37,3 +37,7 @@ AnalyzeTaskRepository.init()
         console.log(error);
         process.exit(1);
     });
+
+process.on("unhandledRejection", (reason, promise) => {
+    console.error(reason);
+});
