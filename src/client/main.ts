@@ -60,27 +60,6 @@ const app = new Vue({
                 });
 
             this.$data.state = "analyzing";
-
-            // setTimeout(() => {
-            //     this.$data.analyzeProgresses.push(`Analyzing (1/3) ...`);
-            // }, 1000);
-
-            // setTimeout(() => {
-            //     this.$data.analyzeProgresses.push(`Analyzing (2/3) ...`);
-            // }, 2000);
-
-            // setTimeout(() => {
-            //     this.$data.analyzeProgresses.push(`Analyzing (3/3) ...`);
-            // }, 3000);
-
-            // setTimeout(() => {
-            //     this.$data.analyzeProgresses.push(`Analyzing finish!!`);
-            // }, 4000);
-
-            // setTimeout(() => {
-            //     this.$data.state = "analyzed";
-            //     this.$data.analyzeProgresses.splice(0, this.$data.analyzeProgresses.length);
-            // }, 4500);
         },
         updateAnalyazeStatus() {
             axios.get("http://localhost:3000/api/analyzeTask", {
@@ -94,6 +73,14 @@ const app = new Vue({
 
                 if (response.data.status === "finish") {
                     this.$data.state = "analyzed";
+
+                    this.$data.followEachOther.splice(0, this.$data.followEachOther.length);
+                    this.$data.followedOnly.splice(0, this.$data.followedOnly.length);
+                    this.$data.followOnly.splice(0, this.$data.followOnly.length);
+
+                    this.$data.followEachOther.push(...response.data.result.followEachOther);
+                    this.$data.followedOnly.push(...response.data.result.followedOnly);
+                    this.$data.followOnly.push(...response.data.result.followOnly);
                 }
                 else {
                     setTimeout(() => { this.updateAnalyazeStatus(); }, 1000);
