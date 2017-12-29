@@ -26,6 +26,11 @@ export default class ProfileImageDownloader {
                     return;
                 }
 
+                if (target.profileImageUrl === null || target.profileImageUrl === undefined) {
+                    result.fail.push({ user: target, reason: "profileImageUrl is null or undefined" });
+                    continue;
+                }
+
                 const oldProfileImage = await ProfileImageRepository.find(target.screenName);
                 if (oldProfileImage !== null && oldProfileImage.sourceUrl === target.profileImageUrl) {
                     result.skip.push(target);
