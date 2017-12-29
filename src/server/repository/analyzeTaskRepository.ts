@@ -25,13 +25,34 @@ class AnalyzeTaskRepository {
 
     public async insert(screenName: string): Promise<AnalyzeTask> {
         return new Promise<AnalyzeTask>((resolve, reject) => {
-            this.db.insert({ screenName, progresses: [] }, (error, newDoc) => {
+            this.db.insert({ screenName, progresses: [], status: "init" }, (error, newDoc) => {
                 if (error !== null) {
                     reject(error);
                     return;
                 }
 
                 resolve(newDoc);
+            });
+        });
+    }
+
+    public async updateStatus(task: AnalyzeTask, newStatus: string): Promise<AnalyzeTask> {
+        return new Promise<AnalyzeTask>((resolve, reject) => {
+            const query = { _id: task._id };
+            const update = { status: newStatus };
+            const options = { returnUpdatedDocs: true };
+            this.db.update(query, update, options, (error, numAffected, affectedDocuments) => {
+                if (error != null) {
+                    reject(error);
+                    return;
+                }
+
+                if (numAffected !== 1) {
+                    reject(new Error(`unexpected rows(id=${task._id}, expected=1, actual=${numAffected}`));
+                    return;
+                }
+
+                resolve(affectedDocuments[0]);
             });
         });
     }

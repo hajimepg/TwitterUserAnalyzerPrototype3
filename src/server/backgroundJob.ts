@@ -7,6 +7,7 @@ import AnalyzeTaskRepository from "./repository/analyzeTaskRepository";
 import TwitterGateway from "./twitterGateway";
 
 export async function analyze(task: AnalyzeTask) {
+    await AnalyzeTaskRepository.updateStatus(task, "analyze");
     await AnalyzeTaskRepository.updateProgress(task, "analyzing started");
 
     let followers: User[];
@@ -58,4 +59,5 @@ export async function analyze(task: AnalyzeTask) {
     await AnalyzeTaskRepository.updateProgress(task, "profile image download finish");
 
     await AnalyzeTaskRepository.updateProgress(task, "Analyzing finish!!");
+    await AnalyzeTaskRepository.updateStatus(task, "finish");
 }
