@@ -39,7 +39,7 @@ class AnalyzeTaskRepository {
     public async updateStatus(task: AnalyzeTask, newStatus: string): Promise<AnalyzeTask> {
         return new Promise<AnalyzeTask>((resolve, reject) => {
             const query = { _id: task._id };
-            const update = { status: newStatus };
+            const update = { $set: { status: newStatus } };
             const options = { returnUpdatedDocs: true };
             this.db.update(query, update, options, (error, numAffected, affectedDocuments) => {
                 if (error != null) {
