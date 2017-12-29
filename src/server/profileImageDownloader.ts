@@ -32,10 +32,12 @@ export default class ProfileImageDownloader {
                     continue;
                 }
 
-                const response = await axios.get(target.profileImageUrl, { responseType: "arraybuffer" });
-
-                if (response.status !== 200) {
-                    result.fail.push({ user: target, reason: `statusCode=${response.status}` });
+                let response;
+                try {
+                    response = await axios.get(target.profileImageUrl, { responseType: "arraybuffer" });
+                }
+                catch (error) {
+                    result.fail.push({ user: target, reason: `statusCode=${error.response.status}` });
                     continue;
                 }
 
