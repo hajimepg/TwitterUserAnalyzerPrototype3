@@ -1,6 +1,6 @@
 import * as lodash from "lodash";
 
-import AnalyzeTask from "./analyzeTask";
+import AnalyzeTask from "./model/analyzeTask";
 import User from "./model/user";
 import ProfileImageDownloader from "./profileImageDownloader";
 import AnalyzeTaskRepository from "./repository/analyzeTaskRepository";
