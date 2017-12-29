@@ -78,6 +78,19 @@ class AnalyzeTaskRepository {
         });
     }
 
+    /* tslint:disable-next-line:variable-name */
+    public async find(_id: string) {
+        return new Promise<AnalyzeTask | null>((resolve, reject) => {
+            this.db.findOne({ _id }, (error, doc: AnalyzeTask | null) => {
+                if (error !== null) {
+                    reject(error);
+                }
+
+                resolve(doc);
+            });
+        });
+    }
+
     public compactiton() {
         this.db.persistence.compactDatafile();
     }
