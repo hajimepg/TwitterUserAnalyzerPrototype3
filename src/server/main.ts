@@ -35,6 +35,7 @@ const app = new Koa();
 
 app.use(KoaStatic(path.join(__dirname, "../../static")));
 app.use(KoaStatic(path.join(__dirname, "../client")));
+app.use(KoaStatic(path.join(__dirname, "../../db/profileImage")));
 
 app.use(KoaBodyParser());
 

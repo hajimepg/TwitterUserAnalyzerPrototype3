@@ -11,7 +11,10 @@ Vue.component("user-list", {
     </h1>
     <transition name="fade">
         <div v-if="show" class="flex-container">
-            <div v-for="item in list"><p>{{ item.screenName }}</p></div>
+            <div v-for="item in list">
+                <img v-bind:src="item.profileImageUrl">
+                <p>{{ item.screenName }}</p>
+            </div>
         </div>
     </transition>
 </div>
