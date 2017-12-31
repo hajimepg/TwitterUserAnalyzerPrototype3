@@ -2,6 +2,7 @@ import * as KoaRouter from "koa-router";
 
 import * as BackgroundJob from "./backgroundJob";
 import AnalyzeTaskRepository from "./repository/analyzeTaskRepository";
+import ProfileImageRepository from "./repository/profileImageRepository";
 
 const router = new KoaRouter();
 
@@ -28,7 +29,39 @@ router.get("/api/analyzeTask", async (ctx, next) => {
         return;
     }
 
-    ctx.body = task;
+    let anaylzeResult: any;
+    if (task.result !== undefined) {
+        const profileImageFiller = async (screenName) => {
+            const profileImage = await ProfileImageRepository.find(screenName);
+            const profileImageUrl = (profileImage === null)
+                ? ""
+                : "http://localhost:3000/" + profileImage.localFileName;
+
+            return { profileImageUrl, screenName };
+        };
+
+        const followEachOtherResult = await Promise.all(task.result.followEachOther.map(profileImageFiller));
+        const followedOnlyResult = await Promise.all(task.result.followedOnly.map(profileImageFiller));
+        const followOnlyResult = await Promise.all(task.result.followOnly.map(profileImageFiller));
+
+        // tslint:disable:object-literal-sort-keys
+        anaylzeResult = {
+            followEachOther: followEachOtherResult,
+            followedOnly: followedOnlyResult,
+            followOnly: followOnlyResult
+        };
+        // tslint:enable:object-literal-sort-keys
+    }
+
+    // tslint:disable:object-literal-sort-keys
+    ctx.body = {
+        _id: task._id,
+        screenName: task.screenName,
+        status: task.status,
+        progresses: task.progresses,
+        result: anaylzeResult
+    };
+    // tslint:enable:object-literal-sort-keys
 });
 
 router.post("/api/analyzeTask", async (ctx, next) => {
