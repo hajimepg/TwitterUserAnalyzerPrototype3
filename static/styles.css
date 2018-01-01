@@ -19,18 +19,6 @@ h1 {
     padding: 10px;
 }
 
-.follow-each-other .flex-container div {
-    background-color: aquamarine;
-}
-
-.followed-only .flex-container div {
-    background-color: orange;
-}
-
-.follow-only .flex-container div {
-    background-color: darkolivegreen;
-}
-
 .fade-enter-active, .fade-leave-active {
     transition: all .5s;
 }
