@@ -7,6 +7,17 @@ import AnalyzeTaskRepository from "./repository/analyzeTaskRepository";
 import TwitterGateway from "./twitterGateway";
 
 class BackgroundJob {
+    protected onGetFollowersFinish: (followers: any[]) => void;
+    protected onGetFriendFinish: (friend: any[]) => void;
+
+    public init(
+        onGetFollowersFinish: (followers: any[]) => void,
+        onGetFriendFinish: (friend: any[]) => void
+    ) {
+        this.onGetFollowersFinish = onGetFollowersFinish;
+        this.onGetFriendFinish = onGetFriendFinish;
+    }
+
     public async analyze(task: AnalyzeTask) {
         await AnalyzeTaskRepository.updateStatus(task, "analyze");
         await AnalyzeTaskRepository.updateProgress(task, "analyzing started");
@@ -23,8 +34,10 @@ class BackgroundJob {
                 },
                 async () => {
                     await AnalyzeTaskRepository.updateProgress(task, "Rate limit exceeded. wait 60 sec.");
-                }
+                },
+                this.onGetFollowersFinish
             );
+
             friends = await TwitterGateway.getFriends(
                 async (cursor: number) => {
                     await AnalyzeTaskRepository.updateProgress(task, `get friends(${cursor})`);
@@ -34,7 +47,8 @@ class BackgroundJob {
                 },
                 async () => {
                     await AnalyzeTaskRepository.updateProgress(task, "Rate limit exceeded. wait 60 sec.");
-                }
+                },
+                this.onGetFriendFinish
             );
         }
         catch (error) {

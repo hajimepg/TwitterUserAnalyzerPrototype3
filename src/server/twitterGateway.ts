@@ -18,29 +18,33 @@ class TwitterGateway {
     public getFollowers(
         onRequest: (numuber) => void,
         onRequestSuccuess: (numuber) => void,
-        onRateLimit: () => void
+        onRateLimit: () => void,
+        onComplete: (users: any[]) => void
     ): Promise<User[]> {
-        return this.getUserList("followers/list", onRequest, onRequestSuccuess, onRateLimit);
+        return this.getUserList("followers/list", onRequest, onRequestSuccuess, onRateLimit, onComplete);
     }
 
     public getFriends(
         onRequest: (numuber) => void,
         onRequestSuccuess: (numuber) => void,
-        onRateLimit: () => void
+        onRateLimit: () => void,
+        onComplete: (users: any[]) => void
     ): Promise<User[]> {
-        return this.getUserList("friends/list", onRequest, onRequestSuccuess, onRateLimit);
+        return this.getUserList("friends/list", onRequest, onRequestSuccuess, onRateLimit, onComplete);
     }
 
     protected getUserList(
         endpoint: string,
         onRequest: (numuber) => void,
         onRequestSuccuess: (numuber) => void,
-        onRateLimit: () => void
+        onRateLimit: () => void,
+        onComplete: (responses: any[]) => void
     ): Promise<User[]> {
         const self = this;
 
         return new Promise<User[]>((resolve, reject) => {
             const users: User[] = [];
+            const responses: any[] = [];
 
             function getUserListInternal(cursor: number) {
                 onRequest(cursor);
@@ -65,10 +69,13 @@ class TwitterGateway {
                             screenName: user.screen_name,
                         });
                     }
+                    responses.push(...response.users);
 
                     onRequestSuccuess(cursor);
 
                     if (response.next_cursor === 0) {
+                        onComplete(responses);
+
                         resolve(users);
                     }
                     else {

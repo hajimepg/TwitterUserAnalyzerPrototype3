@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import * as fs from "fs";
 import * as path from "path";
 import * as process from "process";
 
@@ -11,6 +12,8 @@ import * as Twitter from "twitter";
 
 import AnalyzeTaskRepository from "./repository/analyzeTaskRepository";
 import ProfileImageRepository from "./repository/profileImageRepository";
+
+import BackgroundJob from "./backgroundJob";
 import TwitterGateway from "./twitterGateway";
 
 import ApiServerMiddleware from "./apiServerMiddleware";
@@ -18,8 +21,28 @@ import ApiServerMiddleware from "./apiServerMiddleware";
 import StubTwitterClient from "./stub/stubTwitterClient";
 
 Commander
+    .option("--create-stub")
     .option("--use-stub")
     .parse(process.argv);
+
+if (Commander.createStub) {
+    BackgroundJob.init(
+        (followers: any[]) => {
+            fs.writeFileSync("./stubData/stubTwitterClientDataFollowers.json", JSON.stringify(followers, null, 4));
+        },
+        (friends: any[]) => {
+            fs.writeFileSync("./stubData/stubTwitterClientDataFriends.json", JSON.stringify(friends, null, 4));
+        }
+    );
+}
+else {
+    /* tslint:disable:no-empty */
+    BackgroundJob.init(
+        () => {},
+        () => {}
+    );
+    /* tslint:enable:no-empty */
+}
 
 const twitterClient = (Commander.useStub)
     ? new StubTwitterClient()
