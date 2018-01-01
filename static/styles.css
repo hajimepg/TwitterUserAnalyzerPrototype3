@@ -3,7 +3,7 @@ h1 {
 }
 
 #app {
-    width: 600px;
+    width: 90%;
     margin: 10px auto 0 auto;
 }
 
@@ -13,10 +13,17 @@ h1 {
 }
 
 .flex-container div {
-    width: 30px;
-    height: 30px;
-    margin: 5px;
-    padding: 10px;
+    width: 140px;
+    height: 80px;
+    margin-bottom: 10px;
+    border-bottom: solid 2px lightgray;
+    text-align: center;
+}
+
+.flex-container div p {
+    margin: 0 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .fade-enter-active, .fade-leave-active {
