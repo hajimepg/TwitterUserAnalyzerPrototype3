@@ -16,8 +16,8 @@ class TwitterGateway {
     }
 
     public getFollowers(
-        onRequest: (numuber) => void,
-        onRequestSuccuess: (numuber) => void,
+        onRequest: (cursor: number) => void,
+        onRequestSuccuess: (cursor: number) => void,
         onRateLimit: () => void,
         onComplete: (users: any[]) => void
     ): Promise<User[]> {
@@ -25,8 +25,8 @@ class TwitterGateway {
     }
 
     public getFriends(
-        onRequest: (numuber) => void,
-        onRequestSuccuess: (numuber) => void,
+        onRequest: (cursor: number) => void,
+        onRequestSuccuess: (cursor: number) => void,
         onRateLimit: () => void,
         onComplete: (users: any[]) => void
     ): Promise<User[]> {
@@ -35,8 +35,8 @@ class TwitterGateway {
 
     protected getUserList(
         endpoint: string,
-        onRequest: (numuber) => void,
-        onRequestSuccuess: (numuber) => void,
+        onRequest: (cursor: number) => void,
+        onRequestSuccuess: (cursor: number) => void,
         onRateLimit: () => void,
         onComplete: (responses: any[]) => void
     ): Promise<User[]> {
