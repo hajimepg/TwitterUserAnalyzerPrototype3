@@ -36,8 +36,9 @@ router.get("/api/analyzeTask", async (ctx, next) => {
             const profileImageUrl = (profileImage === null)
                 ? ""
                 : "http://localhost:3000/" + profileImage.localFileName;
+            const twitterHomeUrl = "https://twitter.com/" + screenName;
 
-            return { profileImageUrl, screenName };
+            return { profileImageUrl, screenName, twitterHomeUrl };
         };
 
         const followEachOtherResult = await Promise.all(task.result.followEachOther.map(profileImageFiller));
