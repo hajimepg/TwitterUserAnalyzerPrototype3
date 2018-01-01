@@ -69,7 +69,7 @@ class BackgroundJob {
         await AnalyzeTaskRepository.updateProgress(task, "profile image download start");
         const downloader = new ProfileImageDownloader();
         downloader.add(followers);
-        downloader.add(followEachOther);
+        downloader.add(friends);
         const result = await downloader.download();
         console.log(`success: ${result.success.length} fail: ${result.fail.length} skip: ${result.skip.length}`);
         await AnalyzeTaskRepository.updateProgress(task, "profile image download finish");
