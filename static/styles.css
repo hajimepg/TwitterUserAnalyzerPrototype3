@@ -13,8 +13,10 @@ h1 {
 }
 
 .flex-container div {
+    position: relative;
     width: 140px;
-    height: 80px;
+    height: 75px;
+    padding-top: 5px;
     margin-bottom: 10px;
     border-bottom: solid 2px lightgray;
     text-align: center;
@@ -24,6 +26,20 @@ h1 {
     margin: 0 5px;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.flex-container div a {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.flex-container div a:hover {
+    background-color: lightblue;
+    opacity: 0.5;
 }
 
 .fade-enter-active, .fade-leave-active {

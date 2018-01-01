@@ -12,6 +12,7 @@ Vue.component("user-list", {
     <transition name="fade">
         <div v-if="show" class="flex-container">
             <div v-for="item in list">
+                <a href="http://www.twitter.com/" target="_blank"></a>
                 <img v-bind:src="item.profileImageUrl">
                 <p>{{ item.screenName }}</p>
             </div>
