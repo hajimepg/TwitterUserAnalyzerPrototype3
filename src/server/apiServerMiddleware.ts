@@ -1,6 +1,6 @@
 import * as KoaRouter from "koa-router";
 
-import * as BackgroundJob from "./backgroundJob";
+import BackgroundJob from "./backgroundJob";
 import AnalyzeTaskRepository from "./repository/analyzeTaskRepository";
 import ProfileImageRepository from "./repository/profileImageRepository";
 
