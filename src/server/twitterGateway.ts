@@ -16,25 +16,28 @@ class TwitterGateway {
     }
 
     public getFollowers(
+        screenName: string,
         onRequest: (cursor: number) => void,
         onRequestSuccuess: (cursor: number) => void,
         onRateLimit: () => void,
         onComplete: (users: any[]) => void
     ): Promise<User[]> {
-        return this.getUserList("followers/list", onRequest, onRequestSuccuess, onRateLimit, onComplete);
+        return this.getUserList("followers/list", screenName, onRequest, onRequestSuccuess, onRateLimit, onComplete);
     }
 
     public getFriends(
+        screenName: string,
         onRequest: (cursor: number) => void,
         onRequestSuccuess: (cursor: number) => void,
         onRateLimit: () => void,
         onComplete: (users: any[]) => void
     ): Promise<User[]> {
-        return this.getUserList("friends/list", onRequest, onRequestSuccuess, onRateLimit, onComplete);
+        return this.getUserList("friends/list", screenName, onRequest, onRequestSuccuess, onRateLimit, onComplete);
     }
 
     protected getUserList(
         endpoint: string,
+        screenName: string,
         onRequest: (cursor: number) => void,
         onRequestSuccuess: (cursor: number) => void,
         onRateLimit: () => void,
@@ -49,7 +52,7 @@ class TwitterGateway {
             function getUserListInternal(cursor: number) {
                 onRequest(cursor);
 
-                const options = { skip_status: true, count: 200, cursor };
+                const options = { screen_name: screenName, skip_status: true, count: 200, cursor };
 
                 self.client.get(endpoint, options, (error, response) => {
                     if (error) {

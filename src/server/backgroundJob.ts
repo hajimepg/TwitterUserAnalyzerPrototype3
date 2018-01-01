@@ -26,6 +26,7 @@ class BackgroundJob {
         let friends: User[];
         try {
             followers = await TwitterGateway.getFollowers(
+                task.screenName,
                 async (cursor: number) => {
                     await AnalyzeTaskRepository.updateProgress(task, `get followers(${cursor})`);
                 },
@@ -39,6 +40,7 @@ class BackgroundJob {
             );
 
             friends = await TwitterGateway.getFriends(
+                task.screenName,
                 async (cursor: number) => {
                     await AnalyzeTaskRepository.updateProgress(task, `get friends(${cursor})`);
                 },
